@@ -1,0 +1,186 @@
+<!DOCTYPE html><html lang="en"><head>
+  
+  
+  <meta charset="UTF-8">
+  <title>Build a Simon Says Memory Game (Source Code)</title>
+  <style>
+    body { background: #121212; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; font-family: sans-serif; margin: 0; }
+    h1 { font-size: 3rem; margin-bottom: 40px; text-align: center;}
+    .game-board { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .btn { width: 140px; height: 140px; border-radius: 20px; border: 10px solid #222; cursor: pointer; transition: 0.1s; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+    .green { background: #00a74a; }
+    .red { background: #9f0f17; }
+    .yellow { background: #cca707; }
+    .blue { background: #094a8f; }
+    .pressed { box-shadow: 0 0 20px rgba(255,255,255,0.8); opacity: 0.5; transform: scale(0.95); }
+    .game-over { background: red; }
+    .start-btn { margin-top: 40px; padding: 15px 30px; font-size: 20px; cursor: pointer; border: none; border-radius: 8px; background: whitesmoke; }
+  </style>
+
+            <meta name="description" content="A beautiful component imported via Developer Studio AI.">
+            <meta name="robots" content="index, follow">
+            <meta property="og:title" content="Build a Simon Says Memory Game (Source Code)">
+            <meta property="og:description" content="A beautiful component imported via Developer Studio AI.">
+            <meta property="og:image" content="https://codescompiler.com/images/posts/javascript-simon-says-game.png">
+            <meta name="twitter:card" content="summary_large_image">
+            <meta name="twitter:title" content="Build a Simon Says Memory Game (Source Code)">
+            <meta name="twitter:description" content="A beautiful component imported via Developer Studio AI.">
+            <meta name="twitter:image" content="https://codescompiler.com/images/posts/javascript-simon-says-game.png">
+          </head>
+<body>
+
+<!-- ── CODESCOMPILER DEMO HEADER ── -->
+<style>
+  #cc-demo-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    height: 48px;
+    background: #1a1b26;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: white;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999999;
+  }
+  #cc-demo-header a { text-decoration: none; color: white; }
+  .cc-logo { font-size: 14px; font-weight: 900; }
+  .cc-logo span { color: #04aa6d; }
+  .cc-sep { width: 1px; height: 20px; background: rgba(255,255,255,0.12); margin: 0 12px; }
+  .cc-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.65); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cc-actions { display: flex; gap: 8px; }
+  .cc-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: rgba(255,255,255,0.7);
+  }
+  .cc-btn:hover { background: rgba(255,255,255,0.15); color: white; }
+  .cc-btn svg { width: 14px; height: 14px; }
+  @media (max-width: 600px) {
+    .cc-title { display: none; }
+    .cc-btn span { display: none; }
+  }
+</style>
+<header id="cc-demo-header">
+  <div style="display: flex; align-items: center; overflow: hidden;">
+    <a href="https://codescompiler.com" class="cc-logo" target="_blank" rel="dofollow"><span>Codes</span>Compiler</a>
+    <div class="cc-sep"></div>
+    <h1 class="cc-title" title="Build a Simon Says Memory Game (Source Code)" style="margin: 0; font-size: 13px; font-weight: 600;">📺 Build a Simon Says Memory Game (Source Code)</h1>
+  </div>
+  <div class="cc-actions">
+    <a href="https://codescompiler.com/blog/javascript-simon-says-game" class="cc-btn" target="_blank" rel="dofollow" title="Read the full post">
+      <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
+      <span>Back to Post</span>
+    </a>
+    <a href="index.html" class="cc-btn" target="_blank" download="javascript-simon-says-game.html" title="Download source file">
+      <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+      <span>Download</span>
+    </a>
+    <button onclick="document.getElementById('cc-demo-header').style.display='none'" class="cc-btn" title="Hide header for fullscreen view">
+      <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l5-5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+      <span>Fullscreen</span>
+    </button>
+  </div>
+</header>
+<!-- ================================== -->
+
+  <h1 id="level-title">Press Start to Play</h1>
+  <p style="color: #ccc; margin-top: -20px; margin-bottom: 30px; text-align: center;">
+    <strong>How to Play:</strong> Watch the sequence of flashing colors and repeat it by clicking the buttons in the exact same order!
+  </p>
+  <div class="game-board">
+    <div class="btn green" id="green"></div>
+    <div class="btn red" id="red"></div>
+    <div class="btn yellow" id="yellow"></div>
+    <div class="btn blue" id="blue"></div>
+  </div>
+  <button class="start-btn" id="startBtn">Start Game</button>
+
+  <script>
+    let gameSequence = [], userSequence = [], level = 0, playing = false, animating = false;
+    const colors = ["green", "red", "yellow", "blue"];
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+      if(!playing) { 
+        playing = true; 
+        document.getElementById('startBtn').style.display='none'; 
+        nextSequence(); 
+      }
+    });
+
+    function nextSequence() {
+      userSequence = [];
+      level++;
+      document.getElementById("level-title").innerText = `Level ${level}`;
+      
+      const randomColor = colors[Math.floor(Math.random() * 4)];
+      gameSequence.push(randomColor);
+      
+      animating = true;
+      let i = 0;
+      // Play the full sequence back to the user
+      const interval = setInterval(() => {
+        animatePress(gameSequence[i]);
+        i++;
+        if (i >= gameSequence.length) {
+          clearInterval(interval);
+          animating = false; // Allow user to click now
+        }
+      }, 600); // 600ms delay between flashes
+    }
+
+    document.querySelectorAll('.btn').forEach(b => {
+      b.addEventListener('click', function() {
+        // Prevent clicking if game is over or sequence is still playing
+        if(!playing || animating) return;
+        
+        let color = this.id;
+        userSequence.push(color);
+        animatePress(color);
+        checkAnswer(userSequence.length-1);
+      });
+    });
+
+    function checkAnswer(currentLevel) {
+      if(gameSequence[currentLevel] === userSequence[currentLevel]) {
+        // If they got the whole sequence right, go to next level
+        if(userSequence.length === gameSequence.length) {
+          setTimeout(nextSequence, 1000);
+        }
+      } else {
+        // Wrong answer
+        document.body.classList.add("game-over");
+        document.getElementById("level-title").innerText = "Game Over! Score: " + (level-1);
+        setTimeout(() => document.body.classList.remove("game-over"), 200);
+        
+        document.getElementById('startBtn').style.display='block';
+        document.getElementById('startBtn').innerText='Restart';
+        level = 0; 
+        gameSequence = []; 
+        playing = false;
+      }
+    }
+
+    function animatePress(c) {
+      const el = document.getElementById(c);
+      el.classList.add("pressed");
+      setTimeout(() => el.classList.remove("pressed"), 200);
+    }
+  </script>
+
+
+</body></html>
